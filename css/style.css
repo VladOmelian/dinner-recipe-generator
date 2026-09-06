@@ -1,5 +1,58 @@
-
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
-    font-family: system-ui, sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-color: #FFF8E7;
+    color: #4A3B2C;
+}
+
+header {
+    background-color: #E8963E;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+
+}
+
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding:20px;
+}
+
+section{
+    margin-bottom: 24px;
+}
+
+section h2 {
+  color: #6B8E4E;
+}
+
+#result {
+    padding: 28px;
+    text-align: center;
+    border: 2px solid #E8963E;
+    background-color: #FFE9C7;
+} 
+
+#history article {
+    padding: 10px;
+    background-color: #F0E6D2;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+footer {
+  font-size: 0.85rem;
 }
