@@ -7,16 +7,58 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <header>
+        <h1>Генератор рецептів на вечерю</h1>
+   </header>
 
-    <!-- Розділ 1. Шапка: назва застосунку -->
+<main>
+    <section id="generate">
+        <h2>Згенерувати рецепт</h2>
 
-    <!-- Розділ 2. Блок генерації випадкового рецепта: кнопка «Згенерувати рецепт» -->
+        <label for="meal-type">Тип страви</label>
+        <select id="meal-type" name="mealType">
+         <option value="any">Будь-яка</option>
+         <option value="main">Основне</option>
+         <option value="salad">Салат</option>
+         <option value="dessert">Десерт</option>
+        </select>
 
-    <!-- Розділ 3. Блок відображення обраного рецепта: назва, список інгредієнтів, кроки приготування -->
+        <label for="max-time">Максимальний час приготування</label>
+        <input type="number" id="max-time" name="maxTime" min="5" max="180">
 
-    <!-- Розділ 4. Блок історії згенерованих рецептів: список попередніх результатів -->
+        <button type="button">Згенерувати рецепт</button>
 
-    <!-- Розділ 5. Підвал: автор роботи, група, рік -->
+        <div id="result">
+            <img src="assets/img/placeholder.png" alt="Зображення страви">
+        </div>
+    </section>
+
+    <section id="history">
+        <h2>Історія згенерованих рецептів</h2>
+
+        <article>
+            <h3>Паста карбонара</h3>
+            <p>Тип: основна страва · Час приготування: 25 хв</p>
+            <p>Згенеровано: 06.09.2026</p>
+        </article>
+
+        <article>
+            <h3>Грецький салат</h3>
+            <p>Тип: салат · Час приготування: 15 хв</p>
+            <p>Згенеровано: 05.09.2026</p>
+        </article>
+
+        <article>
+            <h3>Крем-суп із гарбуза</h3>
+            <p>Тип: суп · Час приготування: 40 хв</p>
+            <p>Згенеровано: 04.09.2026</p>
+      </article>
+    </section>
+</main>
+
+ <footer>
+     <p>Виконав Омелян Владислав, група ІП-56 &copy 2026</p>
+ </footer>
 
     <script src="js/app.js"></script>
 </body>
