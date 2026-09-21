@@ -15,18 +15,26 @@ body {
 header {
     background-color: #E8963E;
     color: white;
-    text-align: center;
     padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-header h1 {
+.site-header h1 {
     margin: 0;
     font-size: 2rem;
+}
 
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 main {
-    max-width: 600px;
+    max-width: 100%;
     margin: 0 auto;
     padding:20px;
 }
@@ -44,15 +52,44 @@ section h2 {
     text-align: center;
     border: 2px solid #E8963E;
     background-color: #FFE9C7;
-} 
+    width: 100%;
+}
+
+#history .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
 
 #history article {
     padding: 10px;
     background-color: #F0E6D2;
-    margin-bottom: 10px;
     border-radius: 6px;
 }
 
 footer {
   font-size: 0.85rem;
+}
+
+@media (min-width: 600px) {
+    #history .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+ 
+
+    #result {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    #history .cards {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    main {
+        max-width: 1000px;
+    }
 }
