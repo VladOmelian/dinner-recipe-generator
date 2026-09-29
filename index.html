@@ -7,14 +7,19 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <h1>Генератор рецептів на вечерю</h1>
-   </header>
+        <nav>
+            <a href="#generate">Згенерувати</a>
+            <a href="#history">Історія</a>
+        </nav>
+    </header>
 
 <main>
     <section id="generate">
         <h2>Згенерувати рецепт</h2>
 
+        <div class="controls">
         <label for="meal-type">Тип страви</label>
         <select id="meal-type" name="mealType">
          <option value="any">Будь-яка</option>
@@ -27,6 +32,7 @@
         <input type="number" id="max-time" name="maxTime" min="5" max="180">
 
         <button type="button">Згенерувати рецепт</button>
+        </div>
 
         <div id="result">
             <img src="assets/img/placeholder.png" alt="Зображення страви">
@@ -36,6 +42,7 @@
     <section id="history">
         <h2>Історія згенерованих рецептів</h2>
 
+        <div class="cards">
         <article>
             <h3>Паста карбонара</h3>
             <p>Тип: основна страва · Час приготування: 25 хв</p>
@@ -52,12 +59,13 @@
             <h3>Крем-суп із гарбуза</h3>
             <p>Тип: суп · Час приготування: 40 хв</p>
             <p>Згенеровано: 04.09.2026</p>
-      </article>
+        </article>
+        </div>
     </section>
 </main>
 
  <footer>
-     <p>Виконав Омелян Владислав, група ІП-56 &copy 2026</p>
+     <p>Виконав Омелян Владислав, група ІП-56 copy; 2026</p>
  </footer>
 
     <script src="js/app.js"></script>
