@@ -12,6 +12,7 @@ const recipes = [
 
 const QUICK_LIMIT_MINUTES = 20;
 
+// Повертає текстову позначку рецепта: if перевіряє vegetarian === true, потрійний оператор — швидкість приготування
 function getRecipeLabel(recipe) {
     let label = recipe.timeMinutes <= QUICK_LIMIT_MINUTES ? 'швидка страва' : 'потребує часу';
 
@@ -22,6 +23,8 @@ function getRecipeLabel(recipe) {
     return label;
 }
 
+// Перебирає всі рецепти циклом for...of, виводить кожен із позначкою
+// і підсумок: кількість рецептів, середній час, кількість вегетаріанських страв
 function printRecipesSummary(recipeList) {
     let totalMinutes = 0;
     let vegetarianCount = 0;
@@ -43,6 +46,7 @@ function printRecipesSummary(recipeList) {
     console.log(`Вегетаріанських страв: ${vegetarianCount} з ${recipeList.length}`);
 }
 
+// Обирає випадковий рецепт: Math.random() задає випадковий індекс, а цикл for...of доходить до рецепта з цим індексом
 function pickRandomWithLoop(recipeList) {
     const randomIndex = Math.floor(Math.random() * recipeList.length);
     let currentIndex = 0;
@@ -55,6 +59,7 @@ function pickRandomWithLoop(recipeList) {
     }
 }
 
+// Виводить у консоль обраний рецепт; вегетаріанську страву додатково позначає
 function printRecipeOfTheDay(recipe) {
     console.log(`Сьогодні на вечерю: ${recipe.name} (${recipe.timeMinutes} хв)`);
 
@@ -65,6 +70,7 @@ function printRecipeOfTheDay(recipe) {
     }
 }
 
+//Повертає випадковий елемент будь-якого масиву
 const pickRandom = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
