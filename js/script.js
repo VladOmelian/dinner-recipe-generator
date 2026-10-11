@@ -7,21 +7,20 @@ if (staticCard !== null) {
 }
 
 const recipes = [
-    { name: 'Курка теріякі з рисом', timeMinutes: 35, vegetarian: false },
-    { name: 'Паста карбонара', timeMinutes: 25, vegetarian: false },
-    { name: 'Грецький салат', timeMinutes: 15, vegetarian: true },
-    { name: 'Крем-суп із гарбуза', timeMinutes: 40, vegetarian: true },
-    { name: 'Овочеве рагу', timeMinutes: 45, vegetarian: true },
-    { name: 'Лосось у вершковому соусі', timeMinutes: 30, vegetarian: false },
-    { name: 'Омлет із сиром і зеленню', timeMinutes: 10, vegetarian: true }
+    { name: 'Курка теріякі з рисом', type: 'main', timeMinutes: 35, vegetarian: false },
+    { name: 'Паста карбонара', type: 'main', timeMinutes: 25, vegetarian: false },
+    { name: 'Грецький салат', type: 'salad', timeMinutes: 15, vegetarian: true },
+    { name: 'Крем-суп із гарбуза', type: 'soup', timeMinutes: 40, vegetarian: true },
+    { name: 'Овочеве рагу', type: 'main', timeMinutes: 45, vegetarian: true },
+    { name: 'Лосось у вершковому соусі', type: 'main', timeMinutes: 30, vegetarian: false },
+    { name: 'Омлет із сиром і зеленню', type: 'main', timeMinutes: 10, vegetarian: true }
 ];
 
 const QUICK_LIMIT_MINUTES = 20;
 
-// Контейнер картки результату, підсумковий елемент і кнопка
+// Контейнер картки результату і підсумковий елемент
 const recipeContainer = document.querySelector('#recipe-result');
 const historyCount = document.querySelector('#history-count');
-const generateButton = document.querySelector('.btn-generate');
 
 // Кількість рецептів, згенерованих за сеанс
 let generatedCount = 0;
@@ -142,16 +141,106 @@ function updateHistoryCount() {
     historyCount.textContent = `Згенеровано рецептів за сеанс: ${generatedCount}`;
 }
 
-// Обирає випадковий рецепт, показує його і збільшує лічильник
-function generateRecipe() {
-    const recipe = pickRandom(recipes);
+// Обирає випадковий рецепт із переданого пулу, показує його і збільшує лічильник
+function generateRecipe(pool) {
+    const recipe = pickRandom(pool);
     renderRecipe(recipe);
     generatedCount++;
     updateHistoryCount();
 }
 
-// Перший рецепт показуємо одразу при завантаженні сторінки
-generateRecipe();
+// Перший рецепт показуємо одразу при завантаженні сторінки (з усіх рецептів)
+generateRecipe(recipes);
 
-// Кожне натискання кнопки перебудовує картку заново
-generateButton.addEventListener('click', generateRecipe);
+//  Форма-фільтр, її поля та елементи для повідомлень
+const form = document.querySelector('#generate-form');
+const typeSelect = document.querySelector('#meal-type');
+const timeInput = document.querySelector('#max-time');
+const vegetarianCheckbox = document.querySelector('#only-vegetarian');
+const resetButton = document.querySelector('.btn-reset');
+const poolInfo = document.querySelector('#pool-info');
+const formError = document.querySelector('#form-error');
+
+// Повертає найменший час приготування серед рецептів — потрібен для валідації поля часу
+function getShortestTime(recipeList) {
+    let shortest = recipeList[0].timeMinutes;
+    for (const recipe of recipeList) {
+        if (recipe.timeMinutes < shortest) {
+            shortest = recipe.timeMinutes;
+        }
+    }
+    return shortest;
+}
+
+const SHORTEST_TIME = getShortestTime(recipes);
+
+// Зчитує значення полів форми і збирає новий масив рецептів, що підходять під фільтри
+function getFilteredRecipes() {
+    const type = typeSelect.value;                     // '' або 'any' — без обмеження
+    const maxTime = Number(timeInput.value);           // порожнє поле дає 0 — без обмеження
+    const onlyVegetarian = vegetarianCheckbox.checked; // true або false
+
+    const pool = [];
+    for (const recipe of recipes) {
+        const typeFits = type === '' || type === 'any' || recipe.type === type;
+        const timeFits = maxTime === 0 || recipe.timeMinutes <= maxTime;
+        const vegetarianFits = onlyVegetarian === false || recipe.vegetarian === true;
+
+        if (typeFits && timeFits && vegetarianFits) {
+            pool.push(recipe);
+        }
+    }
+    return pool;
+}
+
+// Оновлює підказку, скільки рецептів зараз у пулі для випадкового вибору
+function updatePoolInfo() {
+    const pool = getFilteredRecipes();
+    poolInfo.textContent = `Підходить рецептів: ${pool.length} з ${recipes.length}`;
+    formError.textContent = '';
+}
+
+// Сабміт форми (клік по кнопці «Згенерувати»): без перезавантаження
+// обирає випадковий рецепт із відфільтрованого пулу й перемальовує картку
+form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const pool = getFilteredRecipes();
+
+    if (pool.length === 0) {
+        formError.textContent = 'Немає рецептів за цими фільтрами — змініть умови';
+        return;
+    }
+
+    formError.textContent = '';
+    generateRecipe(pool);
+});
+
+// Кнопка «Скинути фільтри»: очищає форму і повертає повний пул рецептів
+resetButton.addEventListener('click', () => {
+    form.reset();
+    timeInput.setCustomValidity('');
+    updatePoolInfo();
+});
+
+// Додаткова валідація: час не може бути меншим, ніж готується найшвидший рецепт
+timeInput.addEventListener('input', () => {
+    const maxTime = Number(timeInput.value);
+
+    if (timeInput.value !== '' && maxTime < SHORTEST_TIME) {
+        timeInput.setCustomValidity(`Найшвидший рецепт готується ${SHORTEST_TIME} хв — вкажіть щонайменше ${SHORTEST_TIME}`);
+    } else {
+        timeInput.setCustomValidity('');
+    }
+
+    updatePoolInfo();
+});
+
+// Зміна чекбокса «Тільки вегетаріанські» одразу звужує пул рецептів
+vegetarianCheckbox.addEventListener('change', updatePoolInfo);
+
+// Зміна типу страви теж змінює пул — оновлюємо підказку
+typeSelect.addEventListener('change', updatePoolInfo);
+
+// Початковий стан підказки при завантаженні сторінки
+updatePoolInfo();

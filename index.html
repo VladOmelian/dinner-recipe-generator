@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор рецептів на вечерю</title>
+    <link rel="icon" href="assets/img/placeholder.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -23,24 +24,35 @@
     <section id="generate">
         <h2>Згенерувати рецепт</h2>
 
-        <div class="controls">
+        <!-- Форма-фільтр звужує пул рецептів для випадкового вибору -->
+        <form id="generate-form" class="controls">
             <div class="field">
                 <label for="meal-type">Тип страви</label>
-                <select id="meal-type" name="mealType">
+                <select id="meal-type" name="mealType" required>
+                    <option value="" disabled selected>Оберіть тип страви</option>
                     <option value="any">Будь-яка</option>
-                    <option value="main">Основне</option>
+                    <option value="main">Основна страва</option>
                     <option value="salad">Салат</option>
-                    <option value="dessert">Десерт</option>
+                    <option value="soup">Суп</option>
                 </select>
             </div>
 
             <div class="field">
                 <label for="max-time">Максимальний час приготування, хв</label>
-                <input type="number" id="max-time" name="maxTime" min="5" max="180">
+                <input type="number" id="max-time" name="maxTime" min="5" max="180" placeholder="Без обмежень">
             </div>
 
-            <button type="button" class="btn-generate">Згенерувати рецепт</button>
-        </div>
+            <div class="field field-checkbox">
+                <input type="checkbox" id="only-vegetarian" name="onlyVegetarian">
+                <label for="only-vegetarian">Тільки вегетаріанські</label>
+            </div>
+
+            <p id="pool-info" class="form-note">Підходить рецептів: 7 з 7</p>
+            <p id="form-error" class="form-error" role="alert"></p>
+
+            <button type="submit" class="btn-generate">Згенерувати рецепт</button>
+            <button type="button" class="btn-reset">Скинути фільтри</button>
+        </form>
 
         <div id="result">
             <p class="result-label">Сьогодні на вечерю</p>

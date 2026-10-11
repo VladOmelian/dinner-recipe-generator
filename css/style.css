@@ -146,6 +146,68 @@ section h2 {
     outline-offset: 2px;
 }
 
+/* Практикум 8: чекбокс, підказка, помилка й кнопка скидання у формі-фільтрі */
+.field.field-checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+}
+
+.field.field-checkbox input {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    accent-color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.field.field-checkbox label {
+    cursor: pointer;
+}
+
+.form-note,
+.form-error {
+    width: 100%;
+    margin: 0;
+    font-size: var(--fs-sm);
+}
+
+.form-note {
+    color: var(--color-text-muted);
+}
+
+.form-error {
+    font-weight: 700;
+    color: var(--color-accent-dark);
+}
+
+.form-error:empty {
+    display: none;
+}
+
+.btn-reset {
+    align-self: center;
+    margin: 0 auto;
+    padding: 10px 24px;
+    font: inherit;
+    font-weight: 700;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 2px solid var(--color-field-border);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.btn-reset:hover {
+    background-color: var(--color-surface-muted);
+}
+
+.btn-reset:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
 .btn-generate {
     font-family: var(--font-display);
     font-size: var(--fs-lg);
@@ -272,6 +334,10 @@ footer p {
 
     .field {
         flex: 1 1 200px;
+    }
+
+    .field.field-checkbox {
+        flex-basis: 100%;
     }
 
     #history .cards {
