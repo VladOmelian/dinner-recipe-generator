@@ -265,7 +265,7 @@ const apiErrorText = document.querySelector('#api-error-text');
 
 // Перетворює рецепт TheMealDB на об'єкт тієї ж форми, що й рецепти з масиву recipes
 function mealToRecipe(meal) {
-    // Деякі поля у відповіді бувають null (наприклад strArea), тому додаємо лише наявні
+    // Деякі поля у відповіді бувають null , тому додаємо лише наявні
     const detailParts = [];
     if (meal.strCategory) {
         detailParts.push(`Категорія: ${meal.strCategory}`);
@@ -310,7 +310,8 @@ function hideError() {
     apiError.hidden = true;
 }
 
-// Завантажує випадковий рецепт з TheMealDB і показує його в картці результату
+// Завантажує випадковий рецепт з TheMealDB (https://www.themealdb.com/api.php)
+// і показує його в картці результату
 async function loadData() {
     hideError();
     setLoading(true);
