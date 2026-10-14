@@ -247,6 +247,16 @@ section h2 {
     }
 }
 
+/* Стан завантаження: кнопка неактивна, поки триває запит */
+.btn-generate:disabled,
+.btn-generate:disabled:hover {
+    opacity: 0.75;
+    cursor: progress;
+    transform: none;
+    background-color: var(--color-accent);
+    box-shadow: 0 6px 0 var(--color-accent-dark);
+}
+
 #result {
     padding: 28px var(--space-lg);
     text-align: center;
@@ -270,6 +280,69 @@ section h2 {
 .result-meta {
     margin: 0;
     color: var(--color-text-muted);
+}
+
+/* Практикум 9: фото страви з API та інструкція приготування */
+.recipe-card img {
+    display: block;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto var(--space-sm);
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.result-instructions {
+    margin-top: var(--space-md);
+    text-align: left;
+}
+
+.result-instructions summary {
+    font-weight: 700;
+    color: var(--color-secondary);
+    text-align: center;
+    cursor: pointer;
+}
+
+.result-instructions p {
+    margin: var(--space-sm) 0 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+/* Повідомлення про помилку завантаження з кнопкою «Оновити» */
+.api-error {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    background-color: #FDEBE4;
+    color: var(--color-accent-dark);
+    font-weight: 700;
+}
+
+.api-error[hidden] {
+    display: none;
+}
+
+.api-error p {
+    margin: 0 0 var(--space-sm);
+}
+
+.btn-retry {
+    padding: 8px 22px;
+    font: inherit;
+    font-weight: 700;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-field-border);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.btn-retry:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
 }
 
 /* Клас додається з script.js, якщо vegetarian === true */

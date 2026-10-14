@@ -1,5 +1,7 @@
 console.log('script.js підключено');
 
+const API_URL = 'https://www.themealdb.com/api/json/v1/1/random.php';
+
 // Прибираємо статичну картку-заглушку
 const staticCard = document.querySelector('#recipe-result .recipe-card');
 if (staticCard !== null) {
@@ -112,7 +114,7 @@ function renderRecipe(recipe) {
     card.classList.add('recipe-card');
 
     const image = document.createElement('img');
-    image.src = 'assets/img/placeholder.svg';
+    image.src = recipe.image || 'assets/img/placeholder.svg';
     image.alt = `Зображення страви: ${recipe.name}`;
     image.width = 140;
     image.height = 140;
@@ -123,16 +125,35 @@ function renderRecipe(recipe) {
 
     const time = document.createElement('p');
     time.classList.add('result-meta');
-    time.textContent = `Час приготування: ${recipe.timeMinutes} хв`;
+    // У рецептів з API немає часу приготування — замість нього показуємо категорію й кухню
+    time.textContent = recipe.timeMinutes ? `Час приготування: ${recipe.timeMinutes} хв` : recipe.details;
 
     // Атрибут data-time і умовний клас vegetarian
-    card.dataset.time = recipe.timeMinutes;
+    if (recipe.timeMinutes) {
+        card.dataset.time = recipe.timeMinutes;
+    }
     if (recipe.vegetarian === true) {
         card.classList.add('vegetarian');
     }
 
     // Додаємо вузли в картку, а картку — в контейнер
     card.append(image, title, time);
+
+    // Рецепти з API мають інструкцію приготування — показуємо її в розгортуваному блоці
+    if (recipe.instructions) {
+        const details = document.createElement('details');
+        details.classList.add('result-instructions');
+
+        const summary = document.createElement('summary');
+        summary.textContent = 'Як приготувати';
+
+        const text = document.createElement('p');
+        text.textContent = recipe.instructions;
+
+        details.append(summary, text);
+        card.append(details);
+    }
+
     recipeContainer.append(card);
 }
 
@@ -148,9 +169,6 @@ function generateRecipe(pool) {
     generatedCount++;
     updateHistoryCount();
 }
-
-// Перший рецепт показуємо одразу при завантаженні сторінки (з усіх рецептів)
-generateRecipe(recipes);
 
 //  Форма-фільтр, її поля та елементи для повідомлень
 const form = document.querySelector('#generate-form');
@@ -200,20 +218,12 @@ function updatePoolInfo() {
     formError.textContent = '';
 }
 
-// Сабміт форми (клік по кнопці «Згенерувати»): без перезавантаження
-// обирає випадковий рецепт із відфільтрованого пулу й перемальовує картку
+// Сабміт форми (клік по кнопці «Згенерувати»): без перезавантаження сторінки
+// кожен клік надсилає новий запит до API TheMealDB
 form.addEventListener('submit', event => {
     event.preventDefault();
-
-    const pool = getFilteredRecipes();
-
-    if (pool.length === 0) {
-        formError.textContent = 'Немає рецептів за цими фільтрами — змініть умови';
-        return;
-    }
-
     formError.textContent = '';
-    generateRecipe(pool);
+    loadData();
 });
 
 // Кнопка «Скинути фільтри»: очищає форму і повертає повний пул рецептів
@@ -244,3 +254,102 @@ typeSelect.addEventListener('change', updatePoolInfo);
 
 // Початковий стан підказки при завантаженні сторінки
 updatePoolInfo();
+
+// ---------- Практикум 9: клієнт для API ----------
+
+// Кнопки й елементи для повідомлення про помилку
+const generateButton = document.querySelector('.btn-generate');
+const retryButton = document.querySelector('.btn-retry');
+const apiError = document.querySelector('#api-error');
+const apiErrorText = document.querySelector('#api-error-text');
+
+// Перетворює рецепт TheMealDB на об'єкт тієї ж форми, що й рецепти з масиву recipes
+function mealToRecipe(meal) {
+    // Деякі поля у відповіді бувають null (наприклад strArea), тому додаємо лише наявні
+    const detailParts = [];
+    if (meal.strCategory) {
+        detailParts.push(`Категорія: ${meal.strCategory}`);
+    }
+    const area = meal.strArea || meal.strCountry;
+    if (area) {
+        detailParts.push(`Кухня: ${area}`);
+    }
+
+    return {
+        name: meal.strMeal,
+        image: meal.strMealThumb,
+        instructions: meal.strInstructions,
+        details: detailParts.join(' · '),
+        vegetarian: meal.strCategory === 'Vegetarian' || meal.strCategory === 'Vegan'
+    };
+}
+
+// Вмикає або вимикає стан завантаження на кнопках
+function setLoading(isLoading) {
+    generateButton.disabled = isLoading;
+    retryButton.disabled = isLoading;
+    generateButton.textContent = isLoading ? 'Завантажуємо рецепт…' : 'Згенерувати рецепт';
+    recipeContainer.setAttribute('aria-busy', String(isLoading));
+}
+
+// Створює помилку з текстом, зрозумілим користувачу
+function createApiError(message) {
+    const error = new Error(message);
+    error.name = 'ApiError';
+    return error;
+}
+
+// Показує повідомлення про помилку разом із кнопкою «Оновити»
+function showError(message) {
+    apiErrorText.textContent = message;
+    apiError.hidden = false;
+}
+
+// Ховає повідомлення про помилку
+function hideError() {
+    apiError.hidden = true;
+}
+
+// Завантажує випадковий рецепт з TheMealDB і показує його в картці результату
+async function loadData() {
+    hideError();
+    setLoading(true);
+
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw createApiError(`Сервіс рецептів тимчасово недоступний (код ${response.status}). Спробуйте пізніше.`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // У відповіді може не бути масиву meals
+        if (!data.meals || data.meals.length === 0) {
+            throw createApiError('Сервіс не повернув жодного рецепта. Натисніть «Оновити», щоб спробувати ще раз.');
+        }
+
+        const recipe = mealToRecipe(data.meals[0]);
+        renderRecipe(recipe);
+        generatedCount++;
+        updateHistoryCount();
+    } catch (error) {
+        if (error.name === 'ApiError') {
+            showError(error.message);
+        } else if (error.name === 'TypeError') {
+            showError(`Не вдалося завантажити рецепт: немає з'єднання з інтернетом. Перевірте мережу й натисніть «Оновити».`);
+        } else {
+            showError('Не вдалося обробити відповідь сервісу рецептів. Спробуйте ще раз.');
+        }
+        console.error('Помилка завантаження рецепта:', error);
+    } finally {
+        setLoading(false);
+    }
+}
+
+// Кнопка «Оновити» повторює запит після збою без перезавантаження сторінки
+retryButton.addEventListener('click', loadData);
+
+// Перший рецепт завантажуємо з API одразу при відкритті сторінки
+loadData();

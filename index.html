@@ -56,6 +56,13 @@
 
         <div id="result">
             <p class="result-label">Сьогодні на вечерю</p>
+
+            <!-- Повідомлення про помилку завантаження з API та кнопка повтору запиту -->
+            <div id="api-error" class="api-error" role="alert" hidden>
+                <p id="api-error-text"></p>
+                <button type="button" class="btn-retry">Оновити</button>
+            </div>
+
             <div id="recipe-result">
                 <article class="recipe-card">
                     <img src="assets/img/placeholder.svg" alt="Зображення страви" width="140" height="140">
