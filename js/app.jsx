@@ -139,26 +139,69 @@ function App() {
         document.dispatchEvent(new CustomEvent('recipe-regenerated'));
     }
 
-    // Улюблені рецепти зберігаються в localStorage
-    const [favorites, setFavorites] = React.useState(() => loadFromLocalStorage());
-    const storageError = '';
+    // Практикум 11, етап 2: улюблені рецепти зберігаються в IndexedDB
+    const [favorites, setFavorites] = React.useState([]);
+    const [storageError, setStorageError] = React.useState('');
 
-    // Додає рецепт в улюблені й одразу зберігає оновлений масив
-    function addFavorite(recipe) {
-        if (favorites.some(favorite => favorite.id === recipe.id)) {
+    // Показує користувачу зрозуміле повідомлення, якщо IndexedDB недоступна, а деталі — в консоль
+    function handleStorageError(error) {
+        console.error('Помилка IndexedDB:', error);
+        setStorageError('Улюблені рецепти недоступні: браузер не дозволяє зберігати дані (наприклад, у режимі приватного перегляду).');
+    }
+
+    // Джерело даних для списку — результат getAllItems() з IndexedDB
+    async function refreshFavorites() {
+        const items = await getAllItems();
+        setFavorites(items);
+    }
+
+    // Кнопка «В улюблені»: новий рецепт додається, а наявний оновлюється з тим самим id, без дубліката
+    async function addFavorite(recipe) {
+        try {
+            const favorite = toFavorite(recipe);
+            if (favorites.some(item => item.id === favorite.id)) {
+                await updateItem(favorite);
+            } else {
+                await addItem(favorite);
+            }
+            await refreshFavorites();
+        } catch (error) {
+            handleStorageError(error);
+        }
+    }
+
+    // Кнопка «Видалити»: прибирає рецепт з IndexedDB і перечитує список
+    async function removeFavorite(id) {
+        try {
+            await deleteItem(id);
+            await refreshFavorites();
+        } catch (error) {
+            handleStorageError(error);
+        }
+    }
+
+    // Позначка, що улюблені вже завантажуються: у StrictMode ефект запускається двічі,
+    // а міграція має виконатися лише раз
+    const favoritesInitStarted = React.useRef(false);
+
+    // Після монтування: одноразова міграція з localStorage і перше читання улюблених з IndexedDB
+    React.useEffect(() => {
+        if (favoritesInitStarted.current) {
             return;
         }
-        const next = [...favorites, toFavorite(recipe)];
-        setFavorites(next);
-        saveToLocalStorage(next);
-    }
+        favoritesInitStarted.current = true;
 
-    // Видаляє рецепт з улюблених і зберігає оновлений масив
-    function removeFavorite(id) {
-        const next = favorites.filter(favorite => favorite.id !== id);
-        setFavorites(next);
-        saveToLocalStorage(next);
-    }
+        async function initFavorites() {
+            try {
+                await migrateFromLocalStorage();
+                await refreshFavorites();
+            } catch (error) {
+                handleStorageError(error);
+            }
+        }
+
+        initFavorites();
+    }, []);
 
     // Позначка, що перший рецепт уже запитано: StrictMode у режимі розробки запускає ефект двічі,
     // а ref зберігає значення між цими запусками, тож запит до API буде лише один
