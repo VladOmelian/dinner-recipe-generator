@@ -1,4 +1,4 @@
- // Практикум 10. Обрано React: компоненти — це звичайні JavaScript-функції, а JSX
+// Практикум 10. Обрано React: компоненти — це звичайні JavaScript-функції, а JSX
  // поєднує розмітку й логіку в одному місці, тому цей підхід мені зрозуміліший за Vue.
  // Підключено через CDN (React 18 + Babel standalone), без збірки й Node.js.
 
@@ -13,9 +13,9 @@ function createEntry(recipe) {
     return { id: nextEntryId++, recipe: recipe };
 }
 
-// Картка випадкового рецепта. Отримує рецепт і обробник кнопки «Ще!» через props
-// і не звертається до глобальних змінних напряму
-function RandomRecipeCard({ recipe, onRegenerate }) {
+// Картка випадкового рецепта. Отримує рецепт, обробник кнопки «Ще!», ознаку «в улюблених»
+// і обробник кнопки «В улюблені» через props і не звертається до глобальних змінних напряму
+function RandomRecipeCard({ recipe, onRegenerate, isFavorite, onAddFavorite }) {
     // Похідне значення: для своїх рецептів — тип і час, для рецептів з API — категорія й кухня
     const meta = recipe.timeMinutes
         ? `${TYPE_LABELS[recipe.type] || 'Страва'} · ${recipe.timeMinutes} хв`
@@ -44,9 +44,19 @@ function RandomRecipeCard({ recipe, onRegenerate }) {
                 )}
             </article>
 
-            <button type="button" className="btn-more" onClick={onRegenerate}>
-                Ще!
-            </button>
+            <div className="card-actions">
+                <button type="button" className="btn-more" onClick={onRegenerate}>
+                    Ще!
+                </button>
+                <button
+                    type="button"
+                    className="btn-favorite"
+                    onClick={() => onAddFavorite(recipe)}
+                    disabled={isFavorite}
+                >
+                    {isFavorite ? '★ В улюблених' : '☆ В улюблені'}
+                </button>
+            </div>
         </div>
     );
 }
@@ -67,6 +77,41 @@ function RecentRecipes({ entries }) {
             </ul>
         </div>
     );
+}
+
+// Список улюблених рецептів: рендер через map() з key за id рецепта.
+// Якщо сховище недоступне, показує зрозуміле повідомлення замість списку
+function FavoritesList({ favorites, error, onRemove }) {
+    if (error) {
+        return <p className="storage-error" role="alert">{error}</p>;
+    }
+
+    if (favorites.length === 0) {
+        return <p className="favorites-empty">Тут з'являться рецепти, які ви додасте в улюблені.</p>;
+    }
+
+    return (
+        <ul className="favorites-list">
+            {favorites.map(favorite => (
+                <li key={favorite.id}>
+                    <img src={favorite.imageUrl} alt={`Зображення страви: ${favorite.name}`} width="56" height="56" />
+                    <p className="favorite-name">{favorite.name}</p>
+                    <button type="button" className="btn-remove" onClick={() => onRemove(favorite.id)}>
+                        Видалити
+                    </button>
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+// Створює запис улюбленого рецепта за моделлю даних: id, name, imageUrl
+function toFavorite(recipe) {
+    return {
+        id: recipe.id,
+        name: recipe.name,
+        imageUrl: recipe.image || 'assets/img/placeholder.svg'
+    };
 }
 
 // Батьківський компонент: зберігає масив рецептів і показані рецепти в реактивному стані
@@ -94,6 +139,27 @@ function App() {
         document.dispatchEvent(new CustomEvent('recipe-regenerated'));
     }
 
+    // Улюблені рецепти зберігаються в localStorage
+    const [favorites, setFavorites] = React.useState(() => loadFromLocalStorage());
+    const storageError = '';
+
+    // Додає рецепт в улюблені й одразу зберігає оновлений масив
+    function addFavorite(recipe) {
+        if (favorites.some(favorite => favorite.id === recipe.id)) {
+            return;
+        }
+        const next = [...favorites, toFavorite(recipe)];
+        setFavorites(next);
+        saveToLocalStorage(next);
+    }
+
+    // Видаляє рецепт з улюблених і зберігає оновлений масив
+    function removeFavorite(id) {
+        const next = favorites.filter(favorite => favorite.id !== id);
+        setFavorites(next);
+        saveToLocalStorage(next);
+    }
+
     // Позначка, що перший рецепт уже запитано: StrictMode у режимі розробки запускає ефект двічі,
     // а ref зберігає значення між цими запусками, тож запит до API буде лише один
     const initialLoadStarted = React.useRef(false);
@@ -114,10 +180,24 @@ function App() {
         return () => document.removeEventListener('recipe-loaded', handleLoaded);
     }, []);
 
+    // Похідне значення: чи поточний рецепт уже в улюблених
+    const isFavorite = favorites.some(favorite => favorite.id === current.id);
+
     return (
         <>
-            <RandomRecipeCard recipe={current} onRegenerate={regenerate} />
+            <RandomRecipeCard
+                recipe={current}
+                onRegenerate={regenerate}
+                isFavorite={isFavorite}
+                onAddFavorite={addFavorite}
+            />
             <RecentRecipes entries={recent} />
+
+            {/* Список улюблених рендериться в окрему секцію сторінки через портал, але має спільний стан з карткою */}
+            {ReactDOM.createPortal(
+                <FavoritesList favorites={favorites} error={storageError} onRemove={removeFavorite} />,
+                document.getElementById('favorites-root')
+            )}
         </>
     );
 }

@@ -402,6 +402,105 @@ section h2 {
     border-radius: 999px;
 }
 
+/* Практикум 11: кнопка «В улюблені» і список улюблених рецептів */
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.card-actions .btn-more {
+    margin-top: var(--space-md);
+}
+
+.btn-favorite {
+    margin-top: var(--space-md);
+    padding: 8px 22px;
+    font: inherit;
+    font-weight: 700;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-field-border);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.btn-favorite:hover:not(:disabled) {
+    background-color: var(--color-surface-muted);
+}
+
+.btn-favorite:disabled {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    cursor: default;
+}
+
+.btn-favorite:focus-visible,
+.btn-remove:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+.favorites-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.favorites-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius);
+}
+
+.favorites-list img {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.favorite-name {
+    flex: 1;
+    margin: 0;
+    font-weight: 700;
+}
+
+.btn-remove {
+    padding: 6px 14px;
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--color-accent-dark);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.favorites-empty {
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+.storage-error {
+    margin: 0;
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    background-color: #FDEBE4;
+    color: var(--color-accent-dark);
+    font-weight: 700;
+}
+
 /* Клас додається з script.js, якщо vegetarian === true */
 .recipe-card.vegetarian::after {
     content: "🌱 Вегетаріанська страва";
@@ -468,6 +567,10 @@ footer p {
 
     .field.field-checkbox {
         flex-basis: 100%;
+    }
+
+    .favorites-list {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     #history .cards {

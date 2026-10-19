@@ -10,8 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js" defer></script>
+    <!-- функції збереження улюблених рецептів -->
+    <script src="js/storage.js" defer></script>
 
-    <!-- React 18 і Babel standalone через CDN, без збірки й Node.js -->
+    <!-- React 18 і Babel standalone через CDN -->
     <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" defer></script>
     <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" defer></script>
     <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js" defer></script>
@@ -22,6 +24,7 @@
         <h1>Генератор рецептів на вечерю</h1>
         <nav>
             <a href="#generate">Згенерувати</a>
+            <a href="#favorites">Улюблені</a>
             <a href="#history">Історія</a>
         </nav>
     </header>
@@ -77,6 +80,12 @@
                 </article>
             </div>
         </div>
+    </section>
+
+    <!-- Практикум 11: список улюблених рецептів, його рендерить React-компонент FavoritesList -->
+    <section id="favorites">
+        <h2>Улюблені рецепти</h2>
+        <div id="favorites-root"></div>
     </section>
 
     <section id="history">

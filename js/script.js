@@ -9,13 +9,13 @@ if (staticCard !== null) {
 }
 
 const recipes = [
-    { name: 'Курка теріякі з рисом', type: 'main', timeMinutes: 35, vegetarian: false },
-    { name: 'Паста карбонара', type: 'main', timeMinutes: 25, vegetarian: false },
-    { name: 'Грецький салат', type: 'salad', timeMinutes: 15, vegetarian: true },
-    { name: 'Крем-суп із гарбуза', type: 'soup', timeMinutes: 40, vegetarian: true },
-    { name: 'Овочеве рагу', type: 'main', timeMinutes: 45, vegetarian: true },
-    { name: 'Лосось у вершковому соусі', type: 'main', timeMinutes: 30, vegetarian: false },
-    { name: 'Омлет із сиром і зеленню', type: 'main', timeMinutes: 10, vegetarian: true }
+    { id: 'local-1', name: 'Курка теріякі з рисом', type: 'main', timeMinutes: 35, vegetarian: false },
+    { id: 'local-2', name: 'Паста карбонара', type: 'main', timeMinutes: 25, vegetarian: false },
+    { id: 'local-3', name: 'Грецький салат', type: 'salad', timeMinutes: 15, vegetarian: true },
+    { id: 'local-4', name: 'Крем-суп із гарбуза', type: 'soup', timeMinutes: 40, vegetarian: true },
+    { id: 'local-5', name: 'Овочеве рагу', type: 'main', timeMinutes: 45, vegetarian: true },
+    { id: 'local-6', name: 'Лосось у вершковому соусі', type: 'main', timeMinutes: 30, vegetarian: false },
+    { id: 'local-7', name: 'Омлет із сиром і зеленню', type: 'main', timeMinutes: 10, vegetarian: true }
 ];
 
 const QUICK_LIMIT_MINUTES = 20;
@@ -286,6 +286,7 @@ function mealToRecipe(meal) {
     }
 
     return {
+        id: meal.idMeal,
         name: meal.strMeal,
         image: meal.strMealThumb,
         instructions: meal.strInstructions,
