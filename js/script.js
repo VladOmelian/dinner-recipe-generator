@@ -102,6 +102,9 @@ for (let attempt = 1; attempt <= 3; attempt++) {
     console.log(`Спроба ${attempt}: ${randomRecipe.name} — ${getRecipeLabel(randomRecipe)}`);
 }
 
+// Функцію ручного рендеру картки замінено React-компонентом
+// RandomRecipeCard (файл js/app.jsx). Код лишено закоментованим для порівняння.
+/*
 // Попередню картку спочатку видаляє через .remove(), тому на сторінці завжди одна картка
 function renderRecipe(recipe) {
     const oldCard = recipeContainer.querySelector('article');
@@ -156,6 +159,13 @@ function renderRecipe(recipe) {
 
     recipeContainer.append(card);
 }
+*/
+
+// Передає рецепт React-компоненту через власну подію recipe-loaded,
+// замість того щоб будувати картку вручну через createElement
+function showRecipe(recipe) {
+    document.dispatchEvent(new CustomEvent('recipe-loaded', { detail: recipe }));
+}
 
 // Оновлює текст наявного елемента p#history-count
 function updateHistoryCount() {
@@ -165,7 +175,7 @@ function updateHistoryCount() {
 // Обирає випадковий рецепт із переданого пулу, показує його і збільшує лічильник
 function generateRecipe(pool) {
     const recipe = pickRandom(pool);
-    renderRecipe(recipe);
+    showRecipe(recipe);
     generatedCount++;
     updateHistoryCount();
 }
@@ -332,7 +342,7 @@ async function loadData() {
         }
 
         const recipe = mealToRecipe(data.meals[0]);
-        renderRecipe(recipe);
+        showRecipe(recipe);
         generatedCount++;
         updateHistoryCount();
     } catch (error) {
@@ -352,5 +362,10 @@ async function loadData() {
 // Кнопка «Оновити» повторює запит після збою без перезавантаження сторінки
 retryButton.addEventListener('click', loadData);
 
-// Перший рецепт завантажуємо з API одразу при відкритті сторінки
-loadData();
+// Рецепти, обрані кнопкою «Ще!» у React-компоненті, теж рахуємо в історії
+document.addEventListener('recipe-regenerated', () => {
+    generatedCount++;
+    updateHistoryCount();
+});
+
+// Перший рецепт тепер завантажує React-компонент App одразу після монтування (js/app.jsx)

@@ -345,6 +345,63 @@ section h2 {
     outline-offset: 2px;
 }
 
+/* Практикум 10: кнопка «Ще!» і список попередніх рецептів у React-компоненті */
+.btn-more {
+    margin-top: var(--space-md);
+    padding: 10px 32px;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: var(--color-on-secondary);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 4px 0 #2A3F1F;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn-more:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #2A3F1F;
+}
+
+.btn-more:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #2A3F1F;
+}
+
+.btn-more:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+.recent {
+    margin-top: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+}
+
+.recent-title {
+    margin: 0 0 var(--space-xs);
+}
+
+.recent-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.recent-list li {
+    padding: 2px 12px;
+    background-color: var(--color-surface-muted);
+    border-radius: 999px;
+}
+
 /* Клас додається з script.js, якщо vegetarian === true */
 .recipe-card.vegetarian::after {
     content: "🌱 Вегетаріанська страва";
