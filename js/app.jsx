@@ -9,17 +9,23 @@ const TYPE_LABELS = { main: 'Основна страва', salad: 'Салат', 
 let nextEntryId = 1;
 
 // Створює запис для стану: рецепт + унікальний id
-function createEntry(recipe) {
-    return { id: nextEntryId++, recipe: recipe };
+// isInitial позначає рецепт, показаний до першої генерації, — він не потрапляє в історію
+function createEntry(recipe, isInitial = false) {
+    return { id: nextEntryId++, recipe: recipe, createdAt: new Date(), isInitial: isInitial };
+}
+
+// Опис рецепта: для своїх рецептів — тип і час, для рецептів з API — категорія й кухня
+function getRecipeMeta(recipe) {
+    return recipe.timeMinutes
+        ? `${TYPE_LABELS[recipe.type] || 'Страва'} · ${recipe.timeMinutes} хв`
+        : recipe.details;
 }
 
 // Картка випадкового рецепта. Отримує рецепт, обробник кнопки «Ще!», ознаку «в улюблених»
 // і обробник кнопки «В улюблені» через props і не звертається до глобальних змінних напряму
 function RandomRecipeCard({ recipe, onRegenerate, isFavorite, onAddFavorite }) {
     // Похідне значення: для своїх рецептів — тип і час, для рецептів з API — категорія й кухня
-    const meta = recipe.timeMinutes
-        ? `${TYPE_LABELS[recipe.type] || 'Страва'} · ${recipe.timeMinutes} хв`
-        : recipe.details;
+    const meta = getRecipeMeta(recipe);
 
     return (
         <div className="random-recipe">
@@ -114,17 +120,39 @@ function toFavorite(recipe) {
     };
 }
 
+// Історія рецептів, згенерованих за сеанс: новіші спочатку, рендер через map() з key за id запису
+function HistoryList({ entries }) {
+    if (entries.length === 0) {
+        return <p className="history-empty">Тут з'являться рецепти, згенеровані за цей сеанс.</p>;
+    }
+
+    return entries.map(entry => (
+        <article key={entry.id}>
+            <h3>{entry.recipe.name}</h3>
+            <p>{getRecipeMeta(entry.recipe)}</p>
+            <p>
+                Згенеровано: {entry.createdAt.toLocaleString('uk-UA', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                })}
+            </p>
+        </article>
+    ));
+}
+
 // Батьківський компонент: зберігає масив рецептів і показані рецепти в реактивному стані
 function App() {
     // Масив рецептів з практикуму 6 тепер у стані React, а не у звичайній змінній
     const [items] = React.useState(() => [...recipes]);
 
     // Показані рецепти, новіші спочатку; перший — поточний
-    const [shown, setShown] = React.useState(() => [createEntry(pickRandom(recipes))]);
+    const [shown, setShown] = React.useState(() => [createEntry(pickRandom(recipes), true)]);
 
     // Похідні значення: поточний рецепт і три попередні обчислюються зі стану, а не зберігаються окремо
     const current = shown[0].recipe;
     const recent = shown.slice(1, 4);
+
+    // Історія для секції внизу сторінки: лише справді згенеровані рецепти, останні шість
+    const history = shown.filter(entry => !entry.isInitial).slice(0, 6);
 
     // Обробник події «Ще!»: обирає новий випадковий рецепт (не той самий, що зараз)
     // і оновлює стан новим масивом, без мутації старого
@@ -240,6 +268,12 @@ function App() {
             {ReactDOM.createPortal(
                 <FavoritesList favorites={favorites} error={storageError} onRemove={removeFavorite} />,
                 document.getElementById('favorites-root')
+            )}
+
+            {/* Картки історії внизу сторінки оновлюються після кожної генерації */}
+            {ReactDOM.createPortal(
+                <HistoryList entries={history} />,
+                document.getElementById('history-root')
             )}
         </>
     );
