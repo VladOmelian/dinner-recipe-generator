@@ -265,6 +265,42 @@ section h2 {
     border-radius: 24px;
 }
 
+/* Барабан перемішування накладається поверх картки, а сама картка плавно тьмяніє */
+#result {
+    position: relative;
+}
+
+#recipe-result {
+    transition: opacity 0.3s ease;
+}
+
+#result.is-shuffling #recipe-result {
+    opacity: 0.12;
+}
+
+.shuffle {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    pointer-events: none;
+}
+
+.shuffle[hidden] {
+    display: none;
+}
+
+.shuffle-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
 .result-label {
     margin: 0 0 var(--space-sm);
     font-size: var(--fs-sm);

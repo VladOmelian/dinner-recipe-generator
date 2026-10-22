@@ -301,6 +301,13 @@ function setLoading(isLoading) {
     retryButton.disabled = isLoading;
     generateButton.textContent = isLoading ? 'Завантажуємо рецепт…' : 'Згенерувати рецепт';
     recipeContainer.setAttribute('aria-busy', String(isLoading));
+
+    // поки рецепт завантажується, крутиться барабан на Canvas
+    if (isLoading) {
+        startShuffle();
+    } else {
+        stopShuffle();
+    }
 }
 
 // Створює помилку з текстом, зрозумілим користувачу
