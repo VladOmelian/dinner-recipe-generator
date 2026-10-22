@@ -14,6 +14,8 @@
     <script src="js/storage.js" defer></script>
     <!-- Практикум 12: Canvas-анімація перемішування рецептів -->
     <script src="js/shuffle.js" defer></script>
+    <!-- Практикум 13: клієнтська маршрутизація (hash-based) -->
+    <script src="js/router.js" defer></script>
 
     <!-- React 18 і Babel standalone через CDN -->
     <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" defer></script>
@@ -25,14 +27,15 @@
     <header class="site-header">
         <h1>Генератор рецептів на вечерю</h1>
         <nav>
-            <a href="#generate">Згенерувати</a>
-            <a href="#favorites">Улюблені</a>
-            <a href="#history">Історія</a>
+            <a href="#/" data-link data-page="home">Згенерувати</a>
+            <a href="#/favorites" data-link data-page="favorites">Улюблені</a>
+            <a href="#/history" data-link data-page="history">Історія</a>
         </nav>
     </header>
 
-<main>
-    <section id="generate">
+<!-- Спільний контейнер усіх «сторінок» SPA -->
+<main id="app">
+    <section id="generate" data-page="home">
         <h2>Згенерувати рецепт</h2>
 
         <!-- Форма-фільтр звужує пул рецептів для випадкового вибору -->
@@ -90,18 +93,31 @@
         </div>
     </section>
 
-    <!-- Практикум 11: список улюблених рецептів, його рендерить React-компонент FavoritesList -->
-    <section id="favorites">
+    <!-- список улюблених рецептів, його рендерить React-компонент FavoritesList -->
+    <section id="favorites" data-page="favorites" hidden>
         <h2>Улюблені рецепти</h2>
         <div id="favorites-root"></div>
     </section>
 
-    <section id="history">
+    <section id="history" data-page="history" hidden>
         <h2>Історія згенерованих рецептів</h2>
         <p id="history-count">Згенеровано рецептів за сеанс: 0</p>
 
         <!-- Картки історії рендерить React-компонент HistoryList з рецептів, згенерованих за сеанс -->
         <div class="cards" id="history-root"></div>
+    </section>
+
+    <!-- сторінка одного збереженого рецепта, маршрут /recipe/:id -->
+    <section id="recipe-page" data-page="recipe" hidden>
+        <h2>Улюблений рецепт</h2>
+        <div id="recipe-detail" class="recipe-detail"></div>
+    </section>
+
+    <!-- сторінка для неіснуючого маршруту -->
+    <section id="not-found" data-page="not-found" hidden>
+        <h2>Сторінку не знайдено</h2>
+        <p>Адреси <code id="not-found-path"></code> у застосунку немає.</p>
+        <p><a href="#/" data-link class="page-link">← Повернутися на головну</a></p>
     </section>
 </main>
 

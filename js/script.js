@@ -102,12 +102,12 @@ for (let attempt = 1; attempt <= 3; attempt++) {
     console.log(`Спроба ${attempt}: ${randomRecipe.name} — ${getRecipeLabel(randomRecipe)}`);
 }
 
-// Функцію ручного рендеру картки замінено React-компонентом
-// RandomRecipeCard (файл js/app.jsx). Код лишено закоментованим для порівняння.
-/*
-// Попередню картку спочатку видаляє через .remove(), тому на сторінці завжди одна картка
-function renderRecipe(recipe) {
-    const oldCard = recipeContainer.querySelector('article');
+
+// Картку на головній малює React-компонент RandomRecipeCard.
+// Контейнер передається параметром, тому функція не прив'язана до одного місця сторінки.
+// Попередню картку в переданому контейнері спочатку видаляє через .remove(), тому там завжди одна картка
+function renderRecipe(recipe, container) {
+    const oldCard = container.querySelector('article');
     if (oldCard !== null) {
         oldCard.remove();
     }
@@ -157,9 +157,8 @@ function renderRecipe(recipe) {
         card.append(details);
     }
 
-    recipeContainer.append(card);
+    container.append(card);
 }
-*/
 
 // Передає рецепт React-компоненту через власну подію recipe-loaded,
 // замість того щоб будувати картку вручну через createElement

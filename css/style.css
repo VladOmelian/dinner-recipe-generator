@@ -95,6 +95,52 @@ img {
     text-decoration: underline;
 }
 
+/* Практикум 13: пункт меню поточної «сторінки» */
+.site-header nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+}
+
+/* Сторінки SPA: показується лише секція поточного маршруту */
+[data-page][hidden] {
+    display: none;
+}
+
+/* Сторінка деталей рецепта: та сама картка з практикуму 7 у власній рамці */
+.recipe-detail {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 28px var(--space-lg);
+    text-align: center;
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 24px;
+}
+
+.page-message {
+    margin: 0 0 var(--space-md);
+    color: var(--color-text-muted);
+}
+
+.page-link {
+    display: inline-block;
+    margin-top: var(--space-md);
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+a.favorite-name {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+a.favorite-name:hover,
+a.favorite-name:focus-visible {
+    color: var(--color-secondary);
+}
+
 main {
     flex: 1;
     width: 100%;

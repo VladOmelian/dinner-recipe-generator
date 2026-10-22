@@ -1,4 +1,4 @@
-// Практикум 10. Обрано React: компоненти — це звичайні JavaScript-функції, а JSX
+// Обрано React: компоненти — це звичайні JavaScript-функції, а JSX
  // поєднує розмітку й логіку в одному місці, тому цей підхід мені зрозуміліший за Vue.
  // Підключено через CDN (React 18 + Babel standalone), без збірки й Node.js.
 
@@ -101,7 +101,9 @@ function FavoritesList({ favorites, error, onRemove }) {
             {favorites.map(favorite => (
                 <li key={favorite.id}>
                     <img src={favorite.imageUrl} alt={`Зображення страви: ${favorite.name}`} width="56" height="56" />
-                    <p className="favorite-name">{favorite.name}</p>
+                    <a className="favorite-name" href={`#/recipe/${favorite.id}`} data-link>
+                        {favorite.name}
+                    </a>
                     <button type="button" className="btn-remove" onClick={() => onRemove(favorite.id)}>
                         Видалити
                     </button>
@@ -229,6 +231,16 @@ function App() {
         }
 
         initFavorites();
+    }, []);
+
+    // при переході на сторінку «/favorites» роутер просить перечитати улюблені з IndexedDB
+    React.useEffect(() => {
+        function handleRefresh() {
+            refreshFavorites().catch(handleStorageError);
+        }
+
+        document.addEventListener('favorites-refresh', handleRefresh);
+        return () => document.removeEventListener('favorites-refresh', handleRefresh);
     }, []);
 
     // Позначка, що перший рецепт уже запитано: StrictMode у режимі розробки запускає ефект двічі,

@@ -88,6 +88,18 @@ async function getAllItems() {
     });
 }
 
+// Читання одного запису (Read): повертає улюблений рецепт за id або undefined, якщо його немає
+async function getItem(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const request = tx.objectStore(STORE_NAME).get(id);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+        tx.oncomplete = () => db.close();
+    });
+}
+
 // Видалення (Delete): прибирає улюблений рецепт за id у транзакції readwrite
 async function deleteItem(id) {
     const db = await openDB();
