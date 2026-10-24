@@ -393,6 +393,18 @@ section h2 {
     white-space: pre-line;
 }
 
+/* Практикум 15: інструкція на сторінці рецепта — нумерований список кроків */
+.instruction-steps {
+    margin: var(--space-sm) 0 0;
+    padding-left: var(--space-lg);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+}
+
+.instruction-steps li + li {
+    margin-top: var(--space-xs);
+}
+
 /* Повідомлення про помилку завантаження з кнопкою «Оновити» */
 .api-error {
     margin-bottom: var(--space-md);
