@@ -1,6 +1,8 @@
 console.log('script.js підключено');
 
-const API_URL = 'https://www.themealdb.com/api/json/v1/1/random.php';
+// замість TheMealDB запит іде на власний локальний сервер (server/server.js).
+// Відносна адреса означає той самий origin, з якого відкрито сторінку: http://localhost:3000
+const API_URL = '/api/recipes/random';
 
 // Прибираємо статичну картку-заглушку
 const staticCard = document.querySelector('#recipe-result .recipe-card');
@@ -327,8 +329,8 @@ function hideError() {
     apiError.hidden = true;
 }
 
-// Завантажує випадковий рецепт з TheMealDB (https://www.themealdb.com/api.php)
-// і показує його в картці результату
+// Завантажує випадковий рецепт з локального сервера (GET /api/recipes/random)
+// і показує його в картці результату. До практикуму 14 тут був TheMealDB (https://www.themealdb.com/api.php)
 async function loadData() {
     hideError();
     setLoading(true);

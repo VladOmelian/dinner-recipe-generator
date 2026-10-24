@@ -1,0 +1,15 @@
+{
+  "name": "dinner-recipe-server",
+  "version": "1.0.0",
+  "description": "Локальний сервер для генератора рецептів на вечерю",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "private": true
+}

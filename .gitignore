@@ -1,3 +1,6 @@
+# Залежності Node.js (встановлюються командою npm install)
+node_modules/
+
 .vscode/
 .idea/
 
@@ -10,4 +13,3 @@ desktop.ini
 *.log
 *.tmp
 *~
-

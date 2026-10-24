@@ -1,0 +1,66 @@
+[
+    {
+        "idMeal": "101",
+        "strMeal": "Борщ з пампушками",
+        "strCategory": "Beef",
+        "strArea": "Ukrainian",
+        "strInstructions": "Зваріть бульйон з яловичини.\r\nДодайте картоплю, капусту й засмажку з буряка, моркви та цибулі.\r\nВаріть 15 хвилин, наприкінці додайте часник і зелень.\r\nПодавайте зі сметаною та пампушками.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "102",
+        "strMeal": "Вареники з картоплею",
+        "strCategory": "Vegetarian",
+        "strArea": "Ukrainian",
+        "strInstructions": "Замісіть тісто з борошна, води та солі.\r\nПриготуйте начинку з картопляного пюре й обсмаженої цибулі.\r\nЛіпіть вареники й варіть 5 хвилин після спливання.\r\nПодавайте з цибулевою засмажкою.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "103",
+        "strMeal": "Курка теріякі з рисом",
+        "strCategory": "Chicken",
+        "strArea": "Japanese",
+        "strInstructions": "Наріжте куряче філе шматочками й обсмажте.\r\nДодайте соус теріякі й тушкуйте 5 хвилин до загустіння.\r\nПодавайте з відвареним рисом і кунжутом.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "104",
+        "strMeal": "Грецький салат",
+        "strCategory": "Vegetarian",
+        "strArea": "Greek",
+        "strInstructions": "Наріжте помідори, огірки, перець і червону цибулю.\r\nДодайте оливки й шматочки сиру фета.\r\nЗаправте оливковою олією та посипте орегано.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "105",
+        "strMeal": "Паста карбонара",
+        "strCategory": "Pasta",
+        "strArea": "Italian",
+        "strInstructions": "Відваріть спагеті до стану al dente.\r\nОбсмажте бекон до хрусткості.\r\nЗмішайте пасту з беконом, жовтками й тертим пармезаном.\r\nПоперчіть і подавайте одразу.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "106",
+        "strMeal": "Крем-суп із гарбуза",
+        "strCategory": "Vegetarian",
+        "strArea": "Ukrainian",
+        "strInstructions": "Запечіть гарбуз шматочками до м'якості.\r\nОбсмажте цибулю, додайте гарбуз і овочевий бульйон.\r\nЗбийте блендером, додайте вершки й прогрійте.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "107",
+        "strMeal": "Лосось у вершковому соусі",
+        "strCategory": "Seafood",
+        "strArea": "French",
+        "strInstructions": "Обсмажте стейки лосося по 3 хвилини з кожного боку.\r\nДодайте вершки, часник і шпинат.\r\nТушкуйте 5 хвилин і подавайте з рисом чи картоплею.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    },
+    {
+        "idMeal": "108",
+        "strMeal": "Сирники зі сметаною",
+        "strCategory": "Dessert",
+        "strArea": "Ukrainian",
+        "strInstructions": "Змішайте сир, яйце, цукор і борошно.\r\nСформуйте сирники й обсмажте з обох боків до рум'яності.\r\nПодавайте зі сметаною чи ягідним варенням.",
+        "strMealThumb": "/assets/img/placeholder.svg"
+    }
+]

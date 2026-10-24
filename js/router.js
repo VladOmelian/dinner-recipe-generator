@@ -9,8 +9,8 @@ const pages = app.querySelectorAll('[data-page]');
 const navLinks = document.querySelectorAll('.site-header nav a[data-link]');
 const recipeDetail = document.querySelector('#recipe-detail');
 
-// Адреса API для повного рецепта за id (TheMealDB, той самий тестовий ключ «1», що й у практикумі 9)
-const LOOKUP_URL = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=';
+// Практикум 14: повний рецепт за id тепер віддає локальний сервер (GET /api/recipes/:id)
+const LOOKUP_URL = '/api/recipes/';
 
 // Номер поточного переходу: асинхронна view не перемальовує сторінку, якщо користувач уже перейшов далі
 let currentRenderId = 0;
