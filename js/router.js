@@ -105,7 +105,7 @@ async function viewRecipe(params) {
     const renderId = currentRenderId;
     showPage('recipe', 'Рецепт', 'favorites');
 
-    recipeDetail.innerHTML = '';
+    recipeDetail.replaceChildren();
     recipeDetail.append(createMessage('Завантажуємо рецепт…'));
 
     try {
@@ -115,7 +115,7 @@ async function viewRecipe(params) {
         }
 
         if (!favorite) {
-            recipeDetail.innerHTML = '';
+            recipeDetail.replaceChildren();
             recipeDetail.append(
                 createMessage('Цього рецепта немає серед улюблених.'),
                 createLink('#/favorites', '← До улюблених')
@@ -129,12 +129,12 @@ async function viewRecipe(params) {
         }
 
         document.title = `${recipe.name} — Генератор рецептів на вечерю`;
-        recipeDetail.innerHTML = '';
+        recipeDetail.replaceChildren();
         renderRecipe(recipe, recipeDetail);
         recipeDetail.append(createLink('#/favorites', '← До улюблених'));
     } catch (error) {
         console.error('Помилка відкриття рецепта:', error);
-        recipeDetail.innerHTML = '';
+        recipeDetail.replaceChildren();
         recipeDetail.append(createMessage('Не вдалося відкрити рецепт: сховище улюблених недоступне.'));
     }
 }

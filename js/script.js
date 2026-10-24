@@ -105,6 +105,23 @@ for (let attempt = 1; attempt <= 3; attempt++) {
 }
 
 
+// Розбиває інструкцію приготування на кроки й виводить їх пунктами списку.
+// Текст приходить із зовнішнього джерела (поле strInstructions відповіді API), тому кожен крок
+// записується через textContent: HTML у тексті показується як звичайний текст і не виконується (захист від XSS)
+function renderInstructionSteps(list, instructions) {
+    const steps = instructions
+        .split(/\r?\n/)
+        .map(step => step.trim())
+        .filter(step => step !== '');
+
+    list.replaceChildren();
+    for (const step of steps) {
+        const item = document.createElement('li');
+        item.textContent = step;
+        list.append(item);
+    }
+}
+
 // Картку на головній малює React-компонент RandomRecipeCard.
 // Контейнер передається параметром, тому функція не прив'язана до одного місця сторінки.
 // Попередню картку в переданому контейнері спочатку видаляє через .remove(), тому там завжди одна картка
@@ -152,10 +169,12 @@ function renderRecipe(recipe, container) {
         const summary = document.createElement('summary');
         summary.textContent = 'Як приготувати';
 
-        const text = document.createElement('p');
-        text.textContent = recipe.instructions;
+        // Практикум 15: інструкція виводиться нумерованим списком кроків
+        const steps = document.createElement('ol');
+        steps.classList.add('instruction-steps');
+        renderInstructionSteps(steps, recipe.instructions);
 
-        details.append(summary, text);
+        details.append(summary, steps);
         card.append(details);
     }
 
